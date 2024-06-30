@@ -1,0 +1,10 @@
+{
+  "module": {
+    "name": "cjcalendar",
+    "type": "har",
+    "deviceTypes": [
+      "default",
+      "tablet"
+    ]
+  }
+}

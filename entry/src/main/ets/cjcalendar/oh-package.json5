@@ -1,0 +1,13 @@
+{
+  "name": "cjcalendar",
+  "version": "1.2.3",
+  "description": "cjcalendar 是一款基于ArkTs+ArkUI+NEXT适配开发的常用日历组件，内部集成常规、单选、时间范围选择、多选、自定义日期每项显示等.",
+  "main": "Index.ets",
+  "author": "cjcalendar",
+  "repository": "https://atomgit.com/cj-open/CJOpenNext/tree/master/cjcalendar",
+  "homepage": "https://atomgit.com/cj-open",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "lunar": "^1.0.0"
+  }
+}
