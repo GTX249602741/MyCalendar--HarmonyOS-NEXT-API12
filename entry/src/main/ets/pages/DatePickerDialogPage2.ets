@@ -87,7 +87,7 @@ export  struct DatePickerDialogPage2 {
         DatePicker({
           start: new Date('1970-1-1'),
           end: new Date('2100-1-1'),
-          selected:new Date(this.selectedYear2,this.selectedMonth2!-1,this.selectedDate2)
+          selected:new Date(this.selectedEndYear,this.selectedEndMonth!-1,this.selectedEndDate)
            //new Date(this.selectedYear < this.selectedEndYear?this.selectedEndYear:this.selectedYear,this.selectedMonth-1 < this.selectedEndMonth-1?this.selectedEndMonth-1:this.selectedMonth-1,this.selectedDate < this.selectedEndDate?this.selectedEndDate:this.selectedDate)
         })
           .width(this.fullDayFlag == false? '60%':'100%')

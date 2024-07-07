@@ -6,23 +6,27 @@ import { CJCalendarYear } from '../cjcalendar/src/main/ets/components/components
 import thermal from '@ohos.thermal';
 import hilog from '@ohos.hilog';
 import router from '@ohos.router'
+import {MyDataSource} from '../Util/IDataSource'
 
 @Component
 export  struct YearPage {
+
   date:Date = new Date()
 
-  @State array: Date[] = []
+  private data: MyDataSource = new MyDataSource();
 
-  @State currentMonth:number = this.date.getMonth()+1
+  @StorageLink('currentMonth') currentMonth:number = 1
 
   @Link currentYear:number
 
   aboutToAppear() {
 
+
+
     for (let index = 0; index < 12
       ; index++) {
-      let date :Date = new Date(this.currentYear,index)
-      this.array.push(date)
+      let date :Date = new Date(this.currentYear as number,index)
+      this.data.pushData(date)
     }
   }
 
@@ -37,11 +41,11 @@ export  struct YearPage {
   }
 
   getYearDays(){
-    this.array = []
+    this.data.clearData()
     for (let index = 0; index < 12
       ; index++) {
-      let date :Date = new Date(this.currentYear,index)
-      this.array.push(date)
+      let date :Date = new Date(this.currentYear as number,index)
+      this.data.pushData(date)
     }
   }
 
@@ -51,7 +55,7 @@ export  struct YearPage {
           Image($r('app.media.ic_public_arrow_left_filled'))
             .height(28)
             .onClick(()=>{
-              this.currentYear = this.currentYear-1
+              this.currentYear = this.currentYear!-1
               this.getYearDays()
               console.log('test2',this.currentYear.toString())
             })
@@ -61,7 +65,7 @@ export  struct YearPage {
           Image($r('app.media.ic_public_arrow_right_filled'))
             .height(28)
             .onClick(()=>{
-              this.currentYear= this.currentYear+1
+              this.currentYear= this.currentYear!+1
               this.getYearDays()
               console.log('test2',this.currentYear.toString())
             })
@@ -70,40 +74,32 @@ export  struct YearPage {
         .height('7%')
         .width('100%')
 
-        Grid() {
-          ForEach(this.array, (item: Date, index: number) => {
-            GridItem() {
+        List({initialIndex:this.currentMonth-1}) {
+          LazyForEach(this.data, (item: Date, index: number) => {
+            ListItem() {
               Column() {
                 Row() {
-                  Text((item.getMonth() + 1).toString())
-                    .fontSize(15)
-                    .fontColor(this.currentMonth == index+1?'#0091FF':Color.Black)
-                  Text('月')
-                    .fontSize(8)
-                    .height(20)
-                    .baselineOffset(10)
-                    .fontColor(this.currentMonth == index+1?'#0091FF':Color.Black)
+                  Text((item.getMonth() + 1).toString()+'月')
+                    .fontSize(20)
+                    .fontColor(new Date().getMonth() == index&&this.currentYear == new Date().getFullYear()?'#0091FF':Color.Black)
+
                 }
-                CJCalendarYear({ currMonth: item })
+                .margin({bottom:20})
+                CJCalendarYear({ currMonth: item ,showLunar:true})
                  // .sharedTransition((item.getMonth()+1).toString(),{ duration: 200, curve: Curve.Friction})
-              }.alignItems(HorizontalAlign.Start)
+              }
             }
             .onClick(()=>{
               this.currentMonth = item.getMonth()+1
+              AppStorage.set('currentYear',this.currentYear)
+              AppStorage.set('currentMonth',this.currentMonth)
               router.pushUrl({url:'pages/MonthPage'},router.RouterMode.Single)
-              AppStorage.Set('currentYear',this.currentYear)
-              AppStorage.Set('currentMonth',this.currentMonth)
             })
-            .selectable(true)
-            .width('30%')
-            .height('17%')
+            .width('100%')
             .margin({ top:'7%' })
           })
         }
         .borderRadius(15)
-        .columnsTemplate('1fr,1fr,1fr')
-        .columnsGap('15')
-        .rowsGap(15)
         .width('100%')
         .height('93%')
     }

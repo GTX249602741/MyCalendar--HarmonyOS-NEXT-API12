@@ -71,10 +71,10 @@ export class ScheduleModel{
 
   name: string|undefined
 
-  constructor(id: number, StartYear: number, EndYear: number, StartMonth: number, EndMonth: number, StartDate: number,
+  constructor( StartYear: number, EndYear: number, StartMonth: number, EndMonth: number, StartDate: number,
               EndDate: number,HourStart:number,MinuteStart:number,HourEnd:number,MinuteEnd:number,IsFinish:number,WholeDay:number
   ,Title:string,content:string) {
-    this.id = id
+
     this.StartYear = StartYear
     this.EndYear = EndYear
     this.EndMonth = EndMonth

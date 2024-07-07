@@ -24,9 +24,9 @@ export struct MonthPage {
   date:Date = new Date()
   //linkMonth:any = AppStorage.Link('currentMonth')
   //linkYear:any = AppStorage.Link('currentYear')
-  @State @Watch("onYearChange")currentYear:number | undefined= AppStorage.Get('currentYear')
+  @StorageLink('currentYear') @Watch("onYearChange")currentYear:number | undefined =1
 
-  @State @Watch('onMonthChange')currentMonth:number | undefined= AppStorage.Get('currentMonth')
+  @StorageLink('currentMonth') @Watch('onMonthChange')currentMonth:number | undefined = 1
 
   @State currentDate:number = this.date.getDate()
 
@@ -52,12 +52,12 @@ export struct MonthPage {
       offsetY: 1})
   }
   onYearChange(){
-    AppStorage.Set('currentYear',this.currentYear)
+    AppStorage.set('currentYear',this.currentYear)
 
   }
 
   onMonthChange(){
-    AppStorage.Set('currentMonth',this.currentMonth)
+    AppStorage.set('currentMonth',this.currentMonth)
 
   }
 
@@ -95,7 +95,7 @@ export struct MonthPage {
   }
 
   onBackPress(){
-    router.pushUrl({url:'pages/Index'},router.RouterMode.Single)
+    //router.pushUrl({url:'pages/Index'},router.RouterMode.Single)
    // AppStorage.SetOrCreate('currentYear',this.currentYear)
     //AppStorage.SetOrCreate('currentMonth',this.currentMonth)
 
@@ -103,7 +103,7 @@ export struct MonthPage {
 
   build() {
     Column(){
-      CJCalendar({currentYear:$currentYear,currentMonth:$currentMonth,showLunar:true,onSelectedChanged:async (item:CJDateItem[])=>{
+      CJCalendar({currentYear:this.currentYear,currentMonth:this.currentMonth,showLunar:true,showJieRi:true,onSelectedChanged:async (item:CJDateItem[])=>{
         this.item = item
         this.currentYear = item[0].fullYear
         this.currentMonth = item[0].month+1
@@ -181,6 +181,144 @@ struct ScheduleItem{
 
   @Link currentDate:number
 
+  getTextString():string{
+    if (this.item.WholeDay == 1) {
+      return "全"
+    }
+    if (this.item.StartYear == this.currentYear&&this.currentYear == this.item.EndYear) {
+      if (this.item.StartMonth ==this.currentMonth&&this.currentMonth== this.item.EndMonth) {
+        if (this.item.StartDate ==this.currentDate&&this.currentDate== this.item.EndDate) {
+          return this.item.HourStart!.toString() + ':' +(this.item.MinuteStart! <10? '0'+this.item.MinuteStart!.toString(): this.item.MinuteStart!.toString())
+
+        }
+        if (this.item.StartDate ==this.currentDate&&this.currentDate < this.item.EndDate!){
+          return this.item.HourStart!.toString() + ':' +(this.item.MinuteStart! <10? '0'+this.item.MinuteStart!.toString(): this.item.MinuteStart!.toString())
+        }
+        if (this.item.StartDate! < this.currentDate&&this.currentDate == this.item.EndDate){
+          return this.item.HourEnd!.toString() + ':' +(this.item.MinuteEnd! <10? '0'+this.item.MinuteEnd!.toString(): this.item.MinuteEnd!.toString())
+        }
+
+        if (this.item.StartDate! <this.currentDate&&this.currentDate< this.item.EndDate!) {
+          return'全'
+        }
+      }
+      if (this.item.StartMonth == this.currentMonth &&this.currentMonth < this.item.EndMonth!) {
+        if (this.item.StartDate == this.currentDate) {
+          return this.item.HourStart!.toString() + ':' +(this.item.MinuteStart! <10? '0'+this.item.MinuteStart!.toString(): this.item.MinuteStart!.toString())
+        }
+        if (this.item.StartDate! < this.currentDate) {
+          return '全'
+        }
+      }
+      if (this.item.StartMonth! < this.currentMonth &&this.currentMonth == this.item.EndMonth) {
+        if (this.item.EndDate == this.currentDate) {
+          return this.item.HourEnd!.toString() + ':' +(this.item.MinuteEnd! <10? '0'+this.item.MinuteEnd!.toString(): this.item.MinuteEnd!.toString())
+        }
+        if (this.item.EndDate! > this.currentDate) {
+          return '全'
+        }
+      }
+    }
+    if (this.item.StartYear! < this.currentYear&&this.currentYear < this.item.EndYear!) {
+      return '全'
+    }
+    if (this.item.StartYear == this.currentYear&&this.currentYear < this.item.EndYear!) {
+      if (this.item.StartMonth ==this.currentMonth) {
+        if (this.item.StartDate ==this.currentDate) {
+          return this.item.HourStart!.toString() + ':' +(this.item.MinuteStart! <10? '0'+this.item.MinuteStart!.toString(): this.item.MinuteStart!.toString())
+        }
+        if (this.item.StartDate! <this.currentDate) {
+          return'全'
+        }
+      }
+      if (this.item.StartMonth! < this.currentMonth) {
+        return '全'
+      }
+    }
+    if (this.item.StartYear! < this.currentYear&&this.currentYear == this.item.EndYear) {
+      if (this.currentMonth== this.item.EndMonth) {
+        if (this.currentDate== this.item.EndDate) {
+          return this.item.HourEnd!.toString() + ':' +(this.item.MinuteEnd! <10? '0'+this.item.MinuteEnd!.toString(): this.item.MinuteEnd!.toString())+' '
+        }
+        if (this.currentDate< this.item.EndDate!) {
+          return'全'
+        }
+      }
+      if (this.currentMonth < this.item.EndMonth!) {
+        return '全'
+      }
+    }
+    return ''
+  }
+
+  getTextString2():string{
+    if (this.item.WholeDay == 1) {
+      return "天"
+    }
+    if (this.item.StartYear == this.currentYear&&this.currentYear == this.item.EndYear) {
+      if (this.item.StartMonth ==this.currentMonth&&this.currentMonth== this.item.EndMonth) {
+        if (this.item.StartDate ==this.currentDate&&this.currentDate== this.item.EndDate) {
+          return this.item.HourEnd!.toString() + ':' +(this.item.MinuteEnd! <10? '0'+this.item.MinuteEnd!.toString(): this.item.MinuteEnd!.toString())
+        }
+        if (this.item.StartDate == this.currentDate&&this.currentDate < this.item.EndDate!){
+          return '开始'
+        }
+        if (this.item.StartDate! < this.currentDate&&this.currentDate == this.item.EndDate){
+          return '结束'
+        }
+        if (this.item.StartDate! <this.currentDate&&this.currentDate< this.item.EndDate!) {
+          return'天'
+        }
+      }
+      if (this.item.StartMonth == this.currentMonth &&this.currentMonth < this.item.EndMonth!) {
+        if (this.item.StartDate == this.currentDate) {
+          return '开始'
+        }
+        if (this.item.StartDate! < this.currentDate) {
+          return '天'
+        }
+      }
+      if (this.item.StartMonth! < this.currentMonth &&this.currentMonth == this.item.EndMonth) {
+        if (this.item.EndDate == this.currentDate) {
+          return '结束'
+        }
+        if (this.item.EndDate! > this.currentDate) {
+          return '天'
+        }
+      }
+    }
+    if (this.item.StartYear! < this.currentYear&&this.currentYear < this.item.EndYear!) {
+      return '天'
+    }
+    if (this.item.StartYear == this.currentYear&&this.currentYear < this.item.EndYear!) {
+      if (this.item.StartMonth ==this.currentMonth) {
+        if (this.item.StartDate ==this.currentDate) {
+          return '开始'
+        }
+        if (this.item.StartDate! <this.currentDate) {
+          return'天'
+        }
+      }
+      if (this.item.StartMonth! < this.currentMonth) {
+        return '天'
+      }
+    }
+    if (this.item.StartYear! < this.currentYear&&this.currentYear == this.item.EndYear) {
+      if (this.currentMonth== this.item.EndMonth) {
+        if (this.currentDate== this.item.EndDate) {
+          return this.item.HourEnd!.toString() + ':' +(this.item.MinuteEnd! <10? '0'+this.item.MinuteEnd!.toString(): this.item.MinuteEnd!.toString())+' '+'结束'
+        }
+        if (this.currentDate< this.item.EndDate!) {
+          return'天'
+        }
+      }
+      if (this.currentMonth < this.item.EndMonth!) {
+        return '天'
+      }
+    }
+    return ''
+  }
+
   @Styles builder(){
     .backgroundColor('rgba(243, 243, 243, 0.6)')
     .backdropBlur(20)
@@ -191,87 +329,14 @@ struct ScheduleItem{
       offsetY: 1})
   }
 
- /** ItemDesc(item:ScheduleModel,currentDate:number,currentMonth:number,currentYear:number):string{
-    if (currentYear==item.EndYear&&currentYear==item.StartYear) {
-      console.log('test6','111')
-      if (currentMonth==item.StartMonth&&currentMonth==item.EndMonth) {
-        if (currentDate>item.StartDate&&currentDate<item.EndDate) {
-          return '全天'
-        }
-        if (currentDate == item.EndDate&&currentDate == item.StartDate) {
-          return item.HourStart.toString()+':'+(item.MinuteStart<10?'0'+item.MinuteStart.toString():item.MinuteStart.toString()) +'至'+item.HourEnd.toString()+':'+(item.MinuteEnd<10?'0'+item.MinuteEnd.toString():item.MinuteEnd.toString())
-        }
-        if (currentDate == item.EndDate&&currentDate != item.StartDate) {
-          return item.HourEnd.toString()+':'+(item.MinuteEnd<10?'0'+item.MinuteEnd.toString():item.MinuteEnd.toString())+' '+'结束'
-        }
-        if (currentDate != item.EndDate&&currentDate == item.StartDate) {
-          return item.HourStart.toString()+':'+(item.MinuteStart<10?'0'+item.MinuteStart.toString():item.MinuteStart.toString()) +' '+'开始'
-        }
-      }
-      if (currentMonth>item.StartMonth&&item.EndMonth == currentMonth) {
-        if (currentDate == item.EndDate) {
-          return item.HourEnd.toString()+':'+(item.MinuteEnd<10?'0'+item.MinuteEnd.toString():item.MinuteEnd.toString())+' '+'结束'
-        }
-        if (currentDate < item.EndDate) {
-          return '全天'
-        }
-      }
-      if (currentMonth==item.StartMonth&&currentMonth!=item.EndMonth) {
-        console.log('test6','222')
-        if (currentDate>item.StartDate) {
-          return '全天'
-        }
-        if (currentDate == item.StartDate) {
-          return item.HourStart.toString()+':'+(item.MinuteStart<10?'0'+item.MinuteStart.toString():item.MinuteStart.toString()) +' '+'开始'
-        }
-      }
-      if (currentMonth > item.StartMonth&&currentMonth< item.EndMonth) {
-        return '全天'
-      }
-    }
-    if (currentYear<item.EndYear&&currentYear==item.StartYear) {
-      if (currentMonth > item.StartMonth) {
-        return '全天'
-      }
-      if (currentMonth == item.StartMonth) {
-        if (currentDate > item.StartDate) {
-          return '全天'
-        }
-        if (currentDate == item.StartDate) {
-          return item.HourStart.toString()+':'+(item.MinuteStart<10?'0'+item.MinuteStart.toString():item.MinuteStart.toString()) +' '+'开始'
-        }
-      }
-    }
-    if (currentYear > item.StartYear&&currentYear==item.EndYear) {
-      if (currentMonth < item.EndMonth) {
-        return '全天'
-      }
-      if (currentMonth == item.EndMonth) {
-        if (currentDate < item.EndDate) {
-          return '全天'
-        }
-        if (currentDate = item.EndDate) {
-          return item.HourEnd.toString()+':'+(item.MinuteEnd<10?'0'+item.MinuteEnd.toString():item.MinuteEnd.toString())+' '+'结束'
-        }
-      }
-    }
-    if (currentYear>item.StartYear&&currentYear<item.EndYear) {
-      return '全天'
-    }
-  }
-**/
   build(){
     Row() {
       Column({space:10}){
 
-       Text(this.item.WholeDay == 1? '全':this.item.EndDate == this.item.StartDate?this.item.HourStart!.toString() + ':' +(this.item.MinuteStart! <10? '0'+this.item.MinuteStart!.toString():
-        this.item.MinuteStart!.toString()):this.item.StartDate == this.currentDate?this.item.HourStart!.toString() + ':' +(this.item.MinuteStart! <10? '0'+this.item.MinuteStart!.toString():this.item.MinuteStart!.toString()):
-        this.item.EndDate == this.currentDate?this.item.HourEnd!.toString() + ':' +(this.item.MinuteEnd! <10? '0'+this.item.MinuteEnd!.toString():this.item.MinuteEnd!.toString()):'全')
+       Text(this.getTextString())
           .fontSize(10)
 
-        Text((this.item.WholeDay == 1? '天':this.item.EndDate == this.item.StartDate?this.item.HourEnd!.toString() + ':' +(this.item.MinuteEnd! <10? '0'+this.item.MinuteEnd!.toString():
-        this.item.MinuteEnd!.toString()):this.item.StartDate == this.currentDate?'开始':
-        this.item.EndDate == this.currentDate?'结束':'天'))
+        Text(this.getTextString2())
           .fontSize(10)
 
       }

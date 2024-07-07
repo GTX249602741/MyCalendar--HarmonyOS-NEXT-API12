@@ -66,7 +66,7 @@ export  struct MyOneDayPage {
 
 
         Row() {
-          Text(this.currentYear?.toString() + '年' + this.currentMonth!.toString() + '月' + this.currentDate!.toString() + '日')
+          Text(this.currentYear!.toString() + '年' + this.currentMonth!.toString() + '月' + this.currentDate!.toString() + '日')
             .fontSize(20)
             .width('90%')
             .height('10%')
@@ -100,7 +100,7 @@ export  struct MyOneDayPage {
         List({space:15,scroller:this.scroller}) {
           ForEach(this.scheduleModelArray, (item: ScheduleModel) => {
             ListItem() {
-              scheduleItem({item:item,currentDate:$currentDate})
+              scheduleItem({item:item,currentDate:$currentDate,currentMonth:$currentMonth,currentYear:$currentYear})
               .height('100%')
               .width('100%')
             }
@@ -125,7 +125,80 @@ struct scheduleItem{
 
   @ObjectLink item:ScheduleModel
 
+  @Link currentYear:number
+
   @Link currentDate:number
+  
+  @Link currentMonth:number
+  
+  getTextString():string{
+    if (this.item.WholeDay == 1) {
+      return "全天"
+    }
+    if (this.item.StartYear == this.currentYear&&this.currentYear == this.item.EndYear) {
+      if (this.item.StartMonth ==this.currentMonth&&this.currentMonth== this.item.EndMonth) {
+        if (this.item.StartDate ==this.currentDate&&this.currentDate== this.item.EndDate) {
+          return this.item.HourStart!.toString() + ':' +(this.item.MinuteStart! <10? '0'+this.item.MinuteStart!.toString(): this.item.MinuteStart!.toString())+'-'+
+                 this.item.HourEnd!.toString() + ':' +(this.item.MinuteEnd! <10? '0'+this.item.MinuteEnd!.toString(): this.item.MinuteEnd!.toString())
+        }
+        if (this.item.StartDate! <this.currentDate&&this.currentDate< this.item.EndDate!) {
+          return'全天'
+        }
+        if (this.item.StartDate! == this.currentDate&&this.currentDate < this.item.EndDate!) {
+          return this.item.HourStart!.toString() + ':' +(this.item.MinuteStart! <10? '0'+this.item.MinuteStart!.toString(): this.item.MinuteStart!.toString())+' '+'开始'
+        }
+        if (this.item.StartDate! < this.currentDate&&this.currentDate == this.item.EndDate!) {
+          return this.item.HourEnd!.toString() + ':' +(this.item.MinuteEnd! <10? '0'+this.item.MinuteEnd!.toString(): this.item.MinuteEnd!.toString())+' '+'结束'
+        }
+      }
+      if (this.item.StartMonth == this.currentMonth &&this.currentMonth < this.item.EndMonth!) {
+        if (this.item.StartDate == this.currentDate) {
+          return this.item.HourStart!.toString() + ':' +(this.item.MinuteStart! <10? '0'+this.item.MinuteStart!.toString(): this.item.MinuteStart!.toString())+' '+'开始'
+        }
+        if (this.item.StartDate! < this.currentDate) {
+          return '全天'
+        }
+      }
+      if (this.item.StartMonth! < this.currentMonth &&this.currentMonth == this.item.EndMonth) {
+        if (this.item.EndDate == this.currentDate) {
+          return this.item.HourEnd!.toString() + ':' +(this.item.MinuteEnd! <10? '0'+this.item.MinuteEnd!.toString(): this.item.MinuteEnd!.toString())+' '+'结束'
+        }
+        if (this.item.EndDate! > this.currentDate) {
+          return '全天'
+        }
+      }
+    }
+    if (this.item.StartYear! < this.currentYear&&this.currentYear < this.item.EndYear!) {
+      return '全天'
+    }
+    if (this.item.StartYear == this.currentYear&&this.currentYear < this.item.EndYear!) {
+      if (this.item.StartMonth ==this.currentMonth) {
+        if (this.item.StartDate ==this.currentDate) {
+          return this.item.HourStart!.toString() + ':' +(this.item.MinuteStart! <10? '0'+this.item.MinuteStart!.toString(): this.item.MinuteStart!.toString())+' '+'开始'
+        }
+        if (this.item.StartDate! <this.currentDate) {
+          return'全天'
+        }
+      }
+      if (this.item.StartMonth! < this.currentMonth) {
+        return '全天'
+      }
+    }
+    if (this.item.StartYear! < this.currentYear&&this.currentYear == this.item.EndYear) {
+      if (this.currentMonth== this.item.EndMonth) {
+        if (this.currentDate== this.item.EndDate) {
+          return this.item.HourEnd!.toString() + ':' +(this.item.MinuteEnd! <10? '0'+this.item.MinuteEnd!.toString(): this.item.MinuteEnd!.toString())+' '+'结束'
+        }
+        if (this.currentDate< this.item.EndDate!) {
+          return'全天'
+        }
+      }
+      if (this.currentMonth < this.item.EndMonth!) {
+        return '全天'
+      }
+    }
+    return ''
+  }
 
   @Styles builder(){
     .backgroundColor('rgba(243, 243, 243, 0.6)')
@@ -155,12 +228,7 @@ struct scheduleItem{
         Text(this.item.Title)
           .fontSize(25)
           .margin({ left: 10 })
-        Text(this.item.WholeDay == 1?'全天':this.item.StartDate == this.item.EndDate?
-                                              this.item.HourStart!.toString() + ':' +(this.item.MinuteStart! <10? '0'+this.item.MinuteStart!.toString(): this.item.MinuteStart!.toString())+'-'+
-                                              this.item.HourEnd!.toString() + ':' +(this.item.MinuteEnd! <10? '0'+this.item.MinuteEnd!.toString(): this.item.MinuteEnd!.toString()):
-                                                this.item.StartDate == this.currentDate?this.item.HourStart!.toString() + ':' +(this.item.MinuteStart! <10? '0'+this.item.MinuteStart!.toString(): this.item.MinuteStart!.toString())+' '+'开始':
-                                                  this.item.EndDate == this.currentDate?this.item.HourEnd!.toString() + ':' +(this.item.MinuteEnd! <10? '0'+this.item.MinuteEnd!.toString(): this.item.MinuteEnd!.toString())+' '+'结束':'全天'
-        )
+        Text(this.getTextString())
           .fontSize(15)
           .offset({ x: 0, y: 10 })
           .margin({ right: 10 })

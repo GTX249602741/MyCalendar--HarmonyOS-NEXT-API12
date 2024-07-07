@@ -129,9 +129,9 @@ export struct Index {
 
   date:Date = new Date()
 
-  @State currentYear:number | undefined= AppStorage.Get('currentYear')
+  @StorageLink('currentYear') currentYear:number | undefined= 1
 
-  @State currentMonth:number = this.date.getMonth()+1
+  @StorageLink('currentMonth') currentMonth:number = 1
 
   @State currentDate:number = this.date.getDate()
 
@@ -170,9 +170,9 @@ export struct Index {
   }
 
   onPageShow(){
-    let YearParam :number | undefined= AppStorage.Get('currentYear')
+    let YearParam :number | undefined= AppStorage.get('currentYear')
 
-    let MonthParam:number | undefined = AppStorage.Get('currentMonth')
+    let MonthParam:number | undefined = AppStorage.get('currentMonth')
 
     this.currentYear = YearParam
 

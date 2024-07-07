@@ -130,7 +130,7 @@ struct CreateSchedulePage {
         Image($r('app.media.ic_public_ok'))
           .size({width:30,height:30})
           .onClick(async ()=>{
-            let scheduleModel = new ScheduleModel(0,0,0,0,0,0,0,0,0,0,0,0,0,'','')
+            let scheduleModel = new ScheduleModel(0,0,0,0,0,0,0,0,0,0,0,0,'','')
             scheduleModel.StartYear = this.selectedStartYear
             scheduleModel.StartMonth = this.selectedStartMonth
             scheduleModel.StartDate = this.selectedStartDate

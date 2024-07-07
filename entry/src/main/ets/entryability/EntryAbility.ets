@@ -14,8 +14,8 @@ export default class EntryAbility extends UIAbility {
 
     DbUtil.createTable(CreateTableSQL)
 
-    AppStorage.SetOrCreate('currentYear',new Date().getFullYear())
-    AppStorage.SetOrCreate('currentMonth',new Date().getMonth()+1)
+    AppStorage.setOrCreate('currentYear',new Date().getFullYear())
+    AppStorage.setOrCreate('currentMonth',new Date().getMonth()+1)
 
   }
 

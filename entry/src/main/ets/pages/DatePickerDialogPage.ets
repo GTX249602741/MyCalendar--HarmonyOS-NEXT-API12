@@ -75,7 +75,7 @@ export  struct DatePickerDialogPage {
         DatePicker({
           start: new Date('1970-1-1'),
           end: new Date('2100-1-1'),
-          selected:new Date(this.selectedYear,this.selectedMonth!-1,this.selectedDate)
+          selected:new Date(this.selectedStartYear,this.selectedStartMonth!-1,this.selectedStartDate)
           // new Date(this.selectedYear > this.selectedStartYear?this.selectedStartYear:this.selectedYear,this.selectedMonth-1 > this.selectedStartMonth-1?this.selectedStartMonth-1:this.selectedMonth-1,
               //this.selectedDate > this.selectedStartDate?this.selectedStartDate:this.selectedDate)
         })

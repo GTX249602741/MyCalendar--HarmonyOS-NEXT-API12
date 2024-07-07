@@ -43,7 +43,7 @@ export class CJCellStyle {
   lunarFontSize: number | string | Resource = 10
   lunarFontColor: ResourceColor = $r('sys.color.ohos_id_color_text_primary')
   lunarFontFontWeight: FontWeight = FontWeight.Normal
-  fontSize: number | string | Resource = 9
+  fontSize: number | string | Resource = 18
   fontColor: ResourceColor = $r('sys.color.ohos_id_color_text_primary')
   fontFontWeight: FontWeight = FontWeight.Normal
   // 今日字体颜色
@@ -338,7 +338,7 @@ export struct CJCalendarYear {
     "六",
   ]
   /** 星期标题字体大小 */
-  weekTitleFontSize: number | string | Resource = 7
+  weekTitleFontSize: number | string | Resource = 13
   /** 星期标题字体颜色 */
   weekTitleFontColor: ResourceColor = "#9E9E9E"
   weekTitleBackgroundColor: ResourceColor = "#00000000"
