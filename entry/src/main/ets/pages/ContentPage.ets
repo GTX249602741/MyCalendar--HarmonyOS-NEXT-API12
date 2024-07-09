@@ -5,7 +5,7 @@ import DbUtil from '../Util/DbUtil'
 import { DatePickerDialogPage } from './DatePickerDialogPage'
 import { DatePickerDialogPage2 } from './DatePickerDialogPage2'
 @Entry
-@Component
+@Component//日程详情页
 struct ContentPage {
 
   param:Record<string,ScheduleModel> = router.getParams() as Record<string,ScheduleModel>

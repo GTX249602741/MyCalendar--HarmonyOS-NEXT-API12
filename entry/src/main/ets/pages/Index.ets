@@ -9,7 +9,7 @@ import { Const, ScheduleModel } from '../model/ScheduleModel'
 import thermal from '@ohos.thermal';
 import { Todo } from './Todo'
 import OpenHarmonyTestRunner from '../../../ohosTest/ets/testrunner/OpenHarmonyTestRunner';
-
+// 查询待办日程列表
 export async function getToDoList():Promise<ScheduleModel[]>{
   let list:ScheduleModel[] = []
   let predicates = new relationalStore.RdbPredicates("DATE");
@@ -44,7 +44,7 @@ export async function getToDoList():Promise<ScheduleModel[]>{
 }
 return list
 }
-
+// 查询过期日程列表
 export async function getScheduleOutDatedList():Promise<ScheduleModel[]>{
   let ArrayOutDated:ScheduleModel[] = []
   let date1 = new Date()
@@ -81,7 +81,7 @@ export async function getScheduleOutDatedList():Promise<ScheduleModel[]>{
   return ArrayOutDated
 }
 
-
+//查询指定日期日程列表
 export async function getScheduleList(currentYear:number,currentMonth:number,currentDate:number,currentHour:number,currentMinute:number):Promise<ScheduleModel[]>{
   let scheduleModelArray:ScheduleModel[] = []
   let predicates = new relationalStore.RdbPredicates("DATE")
@@ -111,7 +111,7 @@ export async function getScheduleList(currentYear:number,currentMonth:number,cur
   }
   return scheduleModelArray
 }
-
+// 查询已完成日程列表
 export async function  getScheduleFinishList():Promise<ScheduleModel[]>{
   let ArrayFinish:ScheduleModel[] = []
   let predicates = new relationalStore.RdbPredicates("DATE");

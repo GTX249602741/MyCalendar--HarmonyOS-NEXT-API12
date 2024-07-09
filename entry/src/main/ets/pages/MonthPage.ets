@@ -180,7 +180,7 @@ struct ScheduleItem{
   @Link currentMonth:number
 
   @Link currentDate:number
-
+  // 显示日程信息文本 例如 xx点 开始  xx点 结束
   getTextString():string{
     if (this.item.WholeDay == 1) {
       return "全"
@@ -250,7 +250,7 @@ struct ScheduleItem{
     }
     return ''
   }
-
+  // 显示日程信息文本 例如 xx点 开始  xx点 结束
   getTextString2():string{
     if (this.item.WholeDay == 1) {
       return "天"

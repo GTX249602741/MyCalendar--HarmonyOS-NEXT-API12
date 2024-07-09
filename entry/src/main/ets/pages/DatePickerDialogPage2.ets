@@ -1,5 +1,5 @@
 import thermal from '@ohos.thermal'
-
+//结束时间Picker
 @Component
 @CustomDialog
 export  struct DatePickerDialogPage2 {
